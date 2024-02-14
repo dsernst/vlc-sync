@@ -43,30 +43,32 @@ const tellOtherVLC = async (command: string): Promise<void> => {
 const v = new GlobalKeyboardListener()
 
 // Our event listeners
-v.addListener(async function (e, down) {
-  if ((await getActiveAppName()) !== 'VLC') return
+v.addListener(function (e, down) {
+  ;(async function () {
+    if ((await getActiveAppName()) !== 'VLC') return
 
-  if (e.state !== 'DOWN') return
-  switch (e.name) {
-    // Pause
-    case 'SPACE':
-      tellOtherVLC('pl_pause')
-      break
-    // Seek back 10s
-    case 'LEFT ARROW':
-      tellOtherVLC('seek&val=-10s')
-      break
-    // Seek fwd 10s
-    case 'RIGHT ARROW':
-      tellOtherVLC('seek&val=+10s')
-      break
-    // Sync up other clients to this one
-    case 'BACKTICK': // hotkey for ~, need to check for shift too
-      if (down['RIGHT SHIFT'] || down['LEFT SHIFT']) {
-        const { time } = await getVLCStatus()
-        tellOtherVLC(`seek&val=${time}`)
-      }
-  }
+    if (e.state !== 'DOWN') return
+    switch (e.name) {
+      // Pause
+      case 'SPACE':
+        tellOtherVLC('pl_pause')
+        break
+      // Seek back 10s
+      case 'LEFT ARROW':
+        tellOtherVLC('seek&val=-10s')
+        break
+      // Seek fwd 10s
+      case 'RIGHT ARROW':
+        tellOtherVLC('seek&val=+10s')
+        break
+      // Sync up other clients to this one
+      case 'BACKTICK': // hotkey for ~, need to check for shift too
+        if (down['RIGHT SHIFT'] || down['LEFT SHIFT']) {
+          const { time } = await getVLCStatus()
+          tellOtherVLC(`seek&val=${time}`)
+        }
+    }
+  })()
 })
 
 // Log every key that's pressed
