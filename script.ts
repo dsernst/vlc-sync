@@ -1,59 +1,81 @@
+import { GlobalKeyboardListener } from 'node-global-key-listener'
 import { getActiveAppName } from './get-active-app'
 
 const vlcPassword = 'your_vlc_password' // VLC HTTP interface password
 
 // IPs of both laptops
-const ips = ['192.168.4.30', '192.168.4.58']
+const own = '192.168.4.30'
+const other = '192.168.4.58'
 
 // Auth for VLC's http interface
 const base64Credentials = Buffer.from(`:${vlcPassword}`).toString('base64')
 const authHeader = `Basic ${base64Credentials}`
+const headers = { headers: { Authorization: authHeader }, method: 'GET' }
 
-const sendCommandToVLC = async (command: string): Promise<void> => {
-  ips.forEach(async (ip) => {
-    const url = `http://${ip}:8080/requests/status.xml?command=${command}`
-    try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization: authHeader,
-        },
-        method: 'GET',
-      })
-      if (response.ok) {
-        console.log(`Command ${command} sent to ${ip}`)
-      } else {
-        console.error(
-          `Failed to send command to VLC at ${ip}: Received non-OK response status ${response.status}`
-        )
-      }
-    } catch (error) {
-      console.error(`Failed to send command to VLC at ${ip}: ${error}`)
+const getVLCStatus = async () => {
+  const url = `http://${own}:8080/requests/status.json`
+  try {
+    const response = await fetch(url, headers)
+    if (response.ok) {
+      return response.json()
+    } else {
+      console.error(`error getVLCStatus: response status ${response.status}`)
     }
-  })
+  } catch (error) {
+    console.error(`error getVLCStatus: ${error}`)
+  }
 }
-const { GlobalKeyboardListener } = require('node-global-key-listener')
+
+const tellOtherVLC = async (command: string): Promise<void> => {
+  const ip = other
+  const url = `http://${ip}:8080/requests/status.xml?command=${command}`
+  try {
+    const response = await fetch(url, headers)
+    if (response.ok) {
+      console.log(`To ${ip}: ${command}`)
+    } else {
+      console.error(`error tellOtherVLC ${ip}: response ${response.status}`)
+    }
+  } catch (error) {
+    console.error(`error tellOtherVLC ${ip}: ${error}`)
+  }
+}
 const v = new GlobalKeyboardListener()
 
 // Our event listeners
-v.addListener(async function (e: { state: string; name: string }) {
+v.addListener(async function (e, down) {
   if ((await getActiveAppName()) !== 'VLC') return
 
   if (e.state !== 'DOWN') return
   switch (e.name) {
+    // Pause
     case 'SPACE':
-      sendCommandToVLC('pl_pause')
+      tellOtherVLC('pl_pause')
       break
+    // Seek back 10s
     case 'LEFT ARROW':
-      sendCommandToVLC('seek&val=-10s')
+      tellOtherVLC('seek&val=-10s')
       break
+    // Seek fwd 10s
     case 'RIGHT ARROW':
-      sendCommandToVLC('seek&val=+10s')
+      tellOtherVLC('seek&val=+10s')
       break
+    // Sync up other clients to this one
+    case 'BACKTICK': // hotkey for ~, need to check for shift too
+      if (down['RIGHT SHIFT'] || down['LEFT SHIFT']) {
+        const { time } = await getVLCStatus()
+        tellOtherVLC(`seek&val=${time}`)
+      }
   }
 })
 
 // Log every key that's pressed
-// v.addListener((e) => console.log(`${e.name} ${e.state}`))
+// v.addListener((e, down) =>
+//   console.log(
+//     `${e.name} ${e.state}`
+//     // , ${Object.keys(down).filter((k) => down[k])}`
+//   )
+// )
 
 // Log errors
 new GlobalKeyboardListener({
