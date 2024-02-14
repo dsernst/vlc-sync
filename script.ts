@@ -1,10 +1,9 @@
+import { getActiveAppName } from './get-active-app'
+
 const vlcPassword = 'your_vlc_password' // VLC HTTP interface password
 
 // IPs of both laptops
-const ips = [
-  '192.168.4.30',
-  // '192.168.1.3' // fixme
-]
+const ips = ['192.168.4.30', '192.168.4.58']
 
 // Auth for VLC's http interface
 const base64Credentials = Buffer.from(`:${vlcPassword}`).toString('base64')
@@ -36,7 +35,9 @@ const { GlobalKeyboardListener } = require('node-global-key-listener')
 const v = new GlobalKeyboardListener()
 
 // Our event listeners
-v.addListener(function (e: { state: string; name: string }) {
+v.addListener(async function (e: { state: string; name: string }) {
+  if ((await getActiveAppName()) !== 'VLC') return
+
   if (e.state !== 'DOWN') return
   switch (e.name) {
     case 'SPACE':
