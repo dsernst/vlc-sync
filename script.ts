@@ -12,8 +12,8 @@ const base64Credentials = Buffer.from(`:${vlcPassword}`).toString('base64')
 const authHeader = `Basic ${base64Credentials}`
 const headers = { headers: { Authorization: authHeader }, method: 'GET' }
 
-const getVLCStatus = async () => {
-  const url = `http://${own}:8080/requests/status.json`
+const getVLCStatus = async (ip: string) => {
+  const url = `http://${ip}:8080/requests/status.json`
   try {
     const response = await fetch(url, headers)
     if (response.ok) {
@@ -26,18 +26,17 @@ const getVLCStatus = async () => {
   }
 }
 
-const tellOtherVLC = async (command: string): Promise<void> => {
-  const ip = other
+const tellVLC = async (ip: string, command: string): Promise<void> => {
   const url = `http://${ip}:8080/requests/status.xml?command=${command}`
   try {
     const response = await fetch(url, headers)
     if (response.ok) {
-      console.log(`To ${ip}: ${command}`)
+      console.log(`Told ${ip}: ${command}`)
     } else {
-      console.error(`error tellOtherVLC ${ip}: response ${response.status}`)
+      console.error(`error tellVLC ${ip}: response ${response.status}`)
     }
   } catch (error) {
-    console.error(`error tellOtherVLC ${ip}: ${error}`)
+    console.error(`error tellVLC ${ip}: ${error}`)
   }
 }
 const v = new GlobalKeyboardListener()
@@ -51,22 +50,28 @@ v.addListener(function (e, down) {
     switch (e.name) {
       // Pause
       case 'SPACE':
-        tellOtherVLC('pl_pause')
+        tellVLC(other, 'pl_pause')
         break
       // Seek back 10s
       case 'LEFT ARROW':
-        tellOtherVLC('seek&val=-10s')
+        tellVLC(other, 'seek&val=-10s')
         break
       // Seek fwd 10s
       case 'RIGHT ARROW':
-        tellOtherVLC('seek&val=+10s')
+        tellVLC(other, 'seek&val=+10s')
         break
       // Sync up other clients to this one
-      case 'BACKTICK': // hotkey for ~, need to check for shift too
+      case 'BACKTICK':
+        // for ~ (w/ shift): push other computer to this one
         if (down['RIGHT SHIFT'] || down['LEFT SHIFT']) {
-          const { time } = await getVLCStatus()
-          tellOtherVLC(`seek&val=${time}`)
+          const { time } = await getVLCStatus(own)
+          tellVLC(other, `seek&val=${time}`)
+        } else {
+          // for ` (w/o shift): sync this computer to other one
+          const { time } = await getVLCStatus(other)
+          tellVLC(own, `seek&val=${time}`)
         }
+        break
     }
   })()
 })
