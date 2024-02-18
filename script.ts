@@ -69,7 +69,7 @@ v.addListener(function (e, down) {
         } else {
           // for ` (w/o shift): sync this computer to other one
           const { time } = await getVLCStatus(other)
-          tellVLC(own, `seek&val=${time}`)
+          tellVLC(own, `seek&val=${time + 1}`)
         }
         break
     }
