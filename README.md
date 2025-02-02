@@ -1,9 +1,27 @@
 # vlc-sync
+
 Keep two VLC players in sync during pause, seek forward/back etc.
 
-----
+## Setup instructions
 
-You can create a Node.js script to listen for keyboard events and send commands to VLC on both laptops. 
+- [ ] 1. Git clone this repo down to both computers.
+- [ ] 2. Turn on VLC HTTP Interface, set the password (see Step 2 below), and update the variable in script.ts. Probably need to restart VLC after turning the HTTP interface on for the first time.
+- [ ] 3. Get the two devices local IP address (Wifi settings in Mac menu bar -> "Wifi Settings" -> Details, scroll to bottom), then set it for `own` and `other` vars in `script.ts`.
+- [ ] 4. Make sure you have `bun` installed to run the script.
+- [ ] 5. Install the js dependencies with `bun install`.
+- [ ] 6. Start the script with `bun run script.ts`.
+
+## Supported commands:
+
+- `spacebar` - pause both
+- `right arrow` - jump fwd 10 sec
+- `left arrow` - jump back 10 sec
+- `` ` `` (backtick) - sync your local video's playtime from the other computer's
+- `~` (backtick + shift) - push your local video's playtime to the other computer
+
+## How this Works
+
+You can create a Node.js script to listen for keyboard events and send commands to VLC on both laptops.
 
 VLC Media Player includes a feature called VLC HTTP interface, which can be used to control VLC remotely. This interface allows you to send commands to VLC via HTTP requests, making it possible to play, pause, seek, and perform other actions from a remote application or script.
 
