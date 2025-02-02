@@ -81,7 +81,7 @@ This script listens for spacebar, left arrow, and right arrow key presses to con
 ### Notes:
 
 - Make sure you replace `'your_vlc_password'` with the actual password you've set for the VLC HTTP interface.
-- Update the IP addresses (`'192.168.1.2'`, `'192.168.1.3'`) to match those of your two deviced.
+- Update the IP addresses (`'192.168.1.2'`, `'192.168.1.3'`) to match those of your two devices.
 - This script uses global key hooks, which means it will respond to these keys regardless of which application is currently focused. Be mindful of this when running the script.
 - Ensure VLC is configured correctly on both laptops to accept commands via its HTTP interface, as described in the previous VLC setup steps.
 
