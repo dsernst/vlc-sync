@@ -1,11 +1,21 @@
+import os from 'os'
 import { GlobalKeyboardListener } from 'node-global-key-listener'
 import { getActiveAppName } from './get-active-app'
 
+// Get own local IP
+const own = Object.values(os.networkInterfaces())
+  .flat()
+  .find((iface) => iface?.family === 'IPv4' && !iface.internal)?.address
+console.log("This device's local IP is:", own)
+if (!own) {
+  console.error("ERROR: Could not find this device's local IP")
+  process.exit(1)
+}
+
 const vlcPassword = 'your_vlc_password' // VLC HTTP interface password
 
-// IPs of both laptops
-const own = '192.168.4.30'
-const other = '192.168.4.58'
+// IP of other device
+const other = '192.168.4.115'
 
 // Auth for VLC's http interface
 const base64Credentials = Buffer.from(`:${vlcPassword}`).toString('base64')
