@@ -133,3 +133,5 @@ package-lock.json
 yarn.lock
 
 known-macs.ts
+
+.vscode/
