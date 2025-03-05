@@ -52,6 +52,9 @@ const tellVLC = async (ip: string, command: string): Promise<void> => {
 }
 const v = new GlobalKeyboardListener()
 
+// Set process.env.FOLLOWER_ONLY = 'true' to disable this computer from controlling the other one.
+const follower_only = process.env.FOLLOWER_ONLY === 'true'
+
 // Our event listeners
 v.addListener(function (e, down) {
   ;(async function () {
@@ -61,22 +64,22 @@ v.addListener(function (e, down) {
     switch (e.name) {
       // Pause
       case 'SPACE':
-        tellVLC(other, 'pl_pause')
+        if (!follower_only) tellVLC(other, 'pl_pause')
         break
       // Seek back 10s
       case 'LEFT ARROW':
-        tellVLC(other, 'seek&val=-10s')
+        if (!follower_only) tellVLC(other, 'seek&val=-10s')
         break
       // Seek fwd 10s
       case 'RIGHT ARROW':
-        tellVLC(other, 'seek&val=+10s')
+        if (!follower_only) tellVLC(other, 'seek&val=+10s')
         break
       // Sync up other clients to this one
       case 'BACKTICK':
         // for ~ (w/ shift): push other computer to this one
         if (down['RIGHT SHIFT'] || down['LEFT SHIFT']) {
           const { time } = await getVLCStatus(own)
-          tellVLC(other, `seek&val=${time}`)
+          if (!follower_only) tellVLC(other, `seek&val=${time}`)
         } else {
           // for ` (w/o shift): sync this computer to other one
           const { time } = await getVLCStatus(other)
