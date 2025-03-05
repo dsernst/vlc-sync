@@ -12,7 +12,7 @@ if (!own) {
   process.exit(1)
 }
 
-const vlcPassword = 'your_vlc_password' // VLC HTTP interface password
+const vlcPassword = process.env.VLC_PASSWORD
 
 // IP of other device
 const other = '192.168.4.115'
