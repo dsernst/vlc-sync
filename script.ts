@@ -13,6 +13,7 @@ if (!own) {
 }
 
 const vlcPassword = process.env.VLC_PASSWORD
+if (!vlcPassword) throw new Error('process.env.VLC_PASSWORD not set')
 
 // IP of other device
 const other = '192.168.4.115'
