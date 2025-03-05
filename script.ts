@@ -54,6 +54,7 @@ const v = new GlobalKeyboardListener()
 
 // Set process.env.FOLLOWER_ONLY = 'true' to disable this computer from controlling the other one.
 const follower_only = process.env.FOLLOWER_ONLY === 'true'
+if (follower_only) console.log('Follower-only mode: 👀 ACTIVATED\n')
 
 // Our event listeners
 v.addListener(function (e, down) {
