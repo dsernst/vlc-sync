@@ -5,27 +5,30 @@ Keep two VLC players in sync during pause, seek forward/back etc.
 ## Setup instructions
 
 - [ ] 1. Git clone this repo down to both computers.
-- [ ] 2. Turn on VLC HTTP Interface, set the password (see Step 2 below), and update the variable in script.ts. Probably need to restart VLC after turning the HTTP interface on for the first time.
-- [ ] 3. Get the two devices local IP address (Wifi settings in Mac menu bar -> "Wifi Settings" -> Details, scroll to bottom), then set it for `own` and `other` vars in `script.ts`.
-- [ ] 4. Make sure you have `bun` installed to run the script.
+- [ ] 2. Duplicate the `.env.local.TEMPLATE` file into `.env.local` (dropping `.TEMPLATE`).
+- [ ] 3. Turn on VLC HTTP Interface, set the password (see Step 2 below), and update `VLC_PASSWORD` in your `.env.local`. Probably need to restart VLC after turning the HTTP interface on for the first time.
+- [ ] 4. Make sure you have `bun` installed to run the script. (https://bun.sh)
 - [ ] 5. Install the js dependencies with `bun install`.
-- [ ] 6. Start the script with `bun run script.ts`.
+- [ ] 6. Get the other device's local IP address — own device's IP prints to the console whenever the script starts — then set it to `OTHER_IP` in `.env.local`.
+- [ ] 7. Start the script with `bun run script.ts`.
+
+* Another way to get device's local IP on Macs: Wifi settings in Mac menu bar -> "Wifi Settings" -> Details, scroll to bottom.
 
 ## Supported commands:
 
 - `spacebar` - pause both
 - `right arrow` - jump fwd 10 sec
 - `left arrow` - jump back 10 sec
-- `` ` `` (backtick) - sync your local video's playtime from the other computer's
+- `` ` `` (backtick) - sync your local video's playtime to match the other computer's
 - `~` (backtick + shift) - push your local video's playtime to the other computer
 
 ## How this Works
 
-You can create a Node.js script to listen for keyboard events and send commands to VLC on both laptops.
+This is a node script to listen for keyboard events and send commands to VLC on both laptops.
 
 VLC Media Player includes a feature called VLC HTTP interface, which can be used to control VLC remotely. This interface allows you to send commands to VLC via HTTP requests, making it possible to play, pause, seek, and perform other actions from a remote application or script.
 
-Here's a high-level overview of how you can set up a custom synchronization solution:
+Here's a high-level overview of this synchronization solution:
 
 ### Step 1: Enable the HTTP Interface in VLC
 
@@ -42,65 +45,15 @@ First, ensure that the HTTP interface is enabled on both instances of VLC.
 
 Find out the IP addresses of both computers on your local network. This is needed to send commands to VLC from one device to another.
 
-### Step 3: Create a Synchronization Script
-
-First, ensure you have Node.js installed on your system, then install the required packages using npm:
-
-```bash
-npm install iohook axios
-```
-
-Here's how you could write the script in Node.js:
-
-```javascript
-const iohook = require('iohook')
-const axios = require('axios')
-
-const vlcPassword = 'your_vlc_password' // VLC HTTP interface password
-const ips = ['192.168.1.2', '192.168.1.3'] // IPs of both laptops
-const auth = { auth: { username: '', password: vlcPassword } } // VLC's web interface uses a blank username
-
-const sendCommandToVLC = async (command) => {
-  ips.forEach((ip) => {
-    const url = `http://${ip}:8080/requests/status.xml?command=${command}`
-    axios
-      .get(url, auth)
-      .then(() => console.log(`Command ${command} sent to VLC at ${ip}`))
-      .catch((error) =>
-        console.error(`Failed to send command to VLC at ${ip}: ${error}`)
-      )
-  })
-}
-
-// Define key codes for space, left arrow, and right arrow
-const SPACEBAR_KEYCODE = 57
-const LEFT_ARROW_KEYCODE = 105
-const RIGHT_ARROW_KEYCODE = 106
-
-iohook.on('keydown', (event) => {
-  switch (event.keycode) {
-    case SPACEBAR_KEYCODE:
-      sendCommandToVLC('pl_pause')
-      break
-    case LEFT_ARROW_KEYCODE:
-      sendCommandToVLC('seek&val=-10s')
-      break
-    case RIGHT_ARROW_KEYCODE:
-      sendCommandToVLC('seek&val=+10s')
-      break
-  }
-})
-
-iohook.start()
-```
+### Step 3: Run the script.ts file.
 
 This script listens for spacebar, left arrow, and right arrow key presses to control play/pause and seek operations on VLC. It sends the commands to both VLC instances running on the specified IP addresses.
 
 ### Notes:
 
 - Make sure you replace `'your_vlc_password'` with the actual password you've set for the VLC HTTP interface.
-- Update the IP addresses (`'192.168.1.2'`, `'192.168.1.3'`) to match those of your two devices.
+- Update the OTHER_IP address to match the other device.
 - This script uses global key hooks, which means it will respond to these keys regardless of which application is currently focused. Be mindful of this when running the script.
 - Ensure VLC is configured correctly on both laptops to accept commands via its HTTP interface, as described in the previous VLC setup steps.
 
-This Node.js script offers a flexible and efficient way to synchronize video playback controls across multiple devices, utilizing familiar keyboard shortcuts.
+This script offers a flexible and efficient way to synchronize video playback controls across multiple devices, utilizing familiar keyboard shortcuts.
