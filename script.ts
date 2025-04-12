@@ -42,7 +42,7 @@ const tellVLC = async (ip: string, command: string): Promise<void> => {
   try {
     const response = await fetch(url, headers)
     if (response.ok) {
-      console.log(`Told ${ip}: ${command}`)
+      console.log(`Told ${ip === own ? 'self' : 'other'}: ${command}`)
     } else {
       console.error(`error tellVLC ${ip}: response ${response.status}`)
     }
