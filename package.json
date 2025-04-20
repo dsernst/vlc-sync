@@ -4,11 +4,13 @@
   "description": "Keep two VLC players in sync during pause, seek forward/back",
   "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "find-devices": "bun run find-local-devices.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "local-devices": "^3.0.0",
     "node-global-key-listener": "^0.1.1"
   },
   "devDependencies": {
