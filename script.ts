@@ -62,25 +62,27 @@ v.addListener(function (e, down) {
     if ((await getActiveAppName()) !== 'VLC') return
 
     if (e.state !== 'DOWN') return
+    const shiftPressed = down['RIGHT SHIFT'] || down['LEFT SHIFT']
+
     switch (e.name) {
       // Pause
       case 'SPACE':
-        if (!follower_only) tellVLC(other, 'pl_pause')
+        if (!follower_only || shiftPressed) tellVLC(other, 'pl_pause')
         break
       // Seek back 10s
       case 'LEFT ARROW':
-        if (!follower_only) tellVLC(other, 'seek&val=-10s')
+        if (!follower_only || shiftPressed) tellVLC(other, 'seek&val=-10s')
         break
       // Seek fwd 10s
       case 'RIGHT ARROW':
-        if (!follower_only) tellVLC(other, 'seek&val=+10s')
+        if (!follower_only || shiftPressed) tellVLC(other, 'seek&val=+10s')
         break
       // Sync up other clients to this one
       case 'BACKTICK':
         // for ~ (w/ shift): push other computer to this one
-        if (down['RIGHT SHIFT'] || down['LEFT SHIFT']) {
+        if (shiftPressed) {
           const { time } = await getVLCStatus(own)
-          if (!follower_only) tellVLC(other, `seek&val=${time}`)
+          tellVLC(other, `seek&val=${time}`)
         } else {
           // for ` (w/o shift): sync this computer to other one
           const { time } = await getVLCStatus(other)
