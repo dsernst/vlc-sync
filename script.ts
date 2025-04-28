@@ -67,7 +67,10 @@ v.addListener(function (e, down) {
     switch (e.name) {
       // Pause
       case 'SPACE':
-        if (!follower_only || shiftPressed) tellVLC(other, 'pl_pause')
+        if (!follower_only || shiftPressed) {
+          tellVLC(other, 'pl_pause')
+          if (shiftPressed) tellVLC(own, 'pl_pause')
+        }
         break
       // Seek back 10s
       case 'LEFT ARROW':
