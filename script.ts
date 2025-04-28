@@ -1,7 +1,7 @@
 import os from 'os'
 import { GlobalKeyboardListener } from 'node-global-key-listener'
 import { getActiveAppName } from './get-active-app'
-import { CYAN, GREEN, RESET, YELLOW } from './ansi_colors'
+import { CYAN, GRAY, GREEN, RESET, YELLOW } from './ansi_colors'
 
 // Get own local IP
 const own = Object.values(os.networkInterfaces())
@@ -38,6 +38,11 @@ const getVLCStatus = async (ip: string) => {
   }
 }
 
+const time = () =>
+  GRAY +
+  new Date().toLocaleTimeString().replace(' AM', 'a').replace(' PM', 'p') +
+  RESET
+
 const tellVLC = async (
   ip: string,
   command: string,
@@ -47,7 +52,8 @@ const tellVLC = async (
   const who = ip === own ? `${CYAN} self${RESET}` : `${YELLOW}other${RESET}`
   try {
     const response = await fetch(url, headers)
-    if (response.ok) console.log(`${key.padEnd(4)} ${who}  ${command}`)
+    if (response.ok)
+      console.log(`${time()}   ${key.padEnd(3)} ${who}  ${command}`)
     else console.error(`error tellVLC ${who} response: ${response.status}`)
   } catch (error) {
     console.error(`error tellVLC ${who}: ${error}`)
