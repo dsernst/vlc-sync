@@ -1,6 +1,7 @@
 import os from 'os'
 import { GlobalKeyboardListener } from 'node-global-key-listener'
 import { getActiveAppName } from './get-active-app'
+import { CYAN, RESET, YELLOW } from './ansi_colors'
 
 // Get own local IP
 const own = Object.values(os.networkInterfaces())
@@ -43,10 +44,10 @@ const tellVLC = async (
   key: string
 ): Promise<void> => {
   const url = `http://${ip}:8080/requests/status.xml?command=${command}`
-  const who = ip === own ? ' self' : 'other'
+  const who = ip === own ? `${CYAN} self${RESET}` : `${YELLOW}other${RESET}`
   try {
     const response = await fetch(url, headers)
-    if (response.ok) console.log(`${key.padEnd(4)} ${who}: ${command}`)
+    if (response.ok) console.log(`${key.padEnd(4)} ${who}  ${command}`)
     else console.error(`error tellVLC ${who} response: ${response.status}`)
   } catch (error) {
     console.error(`error tellVLC ${who}: ${error}`)
