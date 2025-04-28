@@ -49,7 +49,7 @@ const tellVLC = async (
   key: string
 ): Promise<void> => {
   const url = `http://${ip}:8080/requests/status.xml?command=${command}`
-  const who = ip === own ? `${CYAN} self${RESET}` : `${YELLOW}other${RESET}`
+  const who = ip === own ? `${YELLOW} self${RESET}` : `${CYAN}other${RESET}`
   try {
     const response = await fetch(url, headers)
     if (response.ok)
