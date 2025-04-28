@@ -37,17 +37,19 @@ const getVLCStatus = async (ip: string) => {
   }
 }
 
-const tellVLC = async (ip: string, command: string): Promise<void> => {
+const tellVLC = async (
+  ip: string,
+  command: string,
+  key: string
+): Promise<void> => {
   const url = `http://${ip}:8080/requests/status.xml?command=${command}`
+  const who = ip === own ? ' self' : 'other'
   try {
     const response = await fetch(url, headers)
-    if (response.ok) {
-      console.log(`Told ${ip === own ? 'self' : 'other'}: ${command}`)
-    } else {
-      console.error(`error tellVLC ${ip}: response ${response.status}`)
-    }
+    if (response.ok) console.log(`${key.padEnd(4)} ${who}: ${command}`)
+    else console.error(`error tellVLC ${who} response: ${response.status}`)
   } catch (error) {
-    console.error(`error tellVLC ${ip}: ${error}`)
+    console.error(`error tellVLC ${who}: ${error}`)
   }
 }
 const v = new GlobalKeyboardListener()
@@ -56,42 +58,36 @@ const v = new GlobalKeyboardListener()
 const follower_only = process.env.FOLLOWER_ONLY === 'true'
 if (follower_only) console.log('Follower-only mode: 👀 ACTIVATED\n')
 
+const commands = {
+  SPACE: ['pl_pause', , '␣'],
+  'LEFT ARROW': ['seek&val=-10s', , '←'],
+  'RIGHT ARROW': ['seek&val=+10s', , '→'],
+  BACKTICK: ['seek&val=', other, '`'], // sync other to own
+  FN: ['seek&val=', own, 'fn'], // sync own to other
+}
+
 // Our event listeners
 v.addListener(function (e, down) {
   ;(async function () {
     if ((await getActiveAppName()) !== 'VLC') return
 
     if (e.state !== 'DOWN') return
-    const shiftPressed = down['RIGHT SHIFT'] || down['LEFT SHIFT']
+    const foundCommand = commands[e.name ?? '']
+    const shiftPressed = !!(down['RIGHT SHIFT'] || down['LEFT SHIFT'])
 
-    switch (e.name) {
-      // Pause
-      case 'SPACE':
+    if (foundCommand) {
+      const [command, target, keyNickname = e.name] = foundCommand
+      if (target) {
+        // The commands w/ a specific target have unique logic
+        const { time } = await getVLCStatus(target === own ? other : own)
+        const offsetTime = time + (target === own ? 1 : 0)
+        tellVLC(target, command + offsetTime, keyNickname)
+      } else {
         if (!follower_only || shiftPressed) {
-          tellVLC(other, 'pl_pause')
-          if (shiftPressed) tellVLC(own, 'pl_pause')
+          tellVLC(other, command, keyNickname)
+          if (shiftPressed) tellVLC(own, command, keyNickname)
         }
-        break
-      // Seek back 10s
-      case 'LEFT ARROW':
-        if (!follower_only || shiftPressed) tellVLC(other, 'seek&val=-10s')
-        break
-      // Seek fwd 10s
-      case 'RIGHT ARROW':
-        if (!follower_only || shiftPressed) tellVLC(other, 'seek&val=+10s')
-        break
-      // Sync up other clients to this one
-      case 'BACKTICK':
-        // for ~ (w/ shift): push other computer to this one
-        if (shiftPressed) {
-          const { time } = await getVLCStatus(own)
-          tellVLC(other, `seek&val=${time}`)
-        } else {
-          // for ` (w/o shift): sync this computer to other one
-          const { time } = await getVLCStatus(other)
-          tellVLC(own, `seek&val=${time + 1}`)
-        }
-        break
+      }
     }
   })()
 })
