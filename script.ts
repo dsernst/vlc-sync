@@ -1,7 +1,7 @@
 import os from 'os'
 import { GlobalKeyboardListener } from 'node-global-key-listener'
 import { getActiveAppName } from './get-active-app'
-import { CYAN, RESET, YELLOW } from './ansi_colors'
+import { CYAN, GREEN, RESET, YELLOW } from './ansi_colors'
 
 // Get own local IP
 const own = Object.values(os.networkInterfaces())
@@ -57,7 +57,10 @@ const v = new GlobalKeyboardListener()
 
 // Set process.env.FOLLOWER_ONLY = 'true' to disable this computer from controlling the other one.
 const follower_only = process.env.FOLLOWER_ONLY === 'true'
-if (follower_only) console.log('Follower-only mode: 👀 ACTIVATED\n')
+if (follower_only)
+  console.log(
+    `Follower-only mode: 👀 ON. Use ${GREEN}shift${RESET} to control both.\n`
+  )
 
 const commands = {
   SPACE: ['pl_pause', , '␣'],
