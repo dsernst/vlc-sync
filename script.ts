@@ -7,7 +7,7 @@ import { CYAN, GRAY, GREEN, RESET, YELLOW } from './ansi_colors'
 const own = Object.values(os.networkInterfaces())
   .flat()
   .find((iface) => iface?.family === 'IPv4' && !iface.internal)?.address
-console.log("This device's local IP is:", own)
+console.log("This device's local IP is:", YELLOW + own, RESET)
 if (!own) {
   console.error("ERROR: Could not find this device's local IP")
   process.exit(1)
