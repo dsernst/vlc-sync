@@ -2,6 +2,8 @@
 
 Keep two VLC players in sync during pause, seek forward/back etc.
 
+<p align="center"><img alt="VLC Sync in action" src="./screenshot.png" width="500px" /></p>
+
 ## Setup instructions
 
 - [ ] 1. Git clone this repo down to both computers.
