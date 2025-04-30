@@ -16,15 +16,15 @@ Keep two VLC players in sync during pause, seek forward/back etc.
 
 ## Setup Instructions
 
-- [ ] 1. Git clone this repo down to both computers.
-- [ ] 2. Duplicate the `.env.local.TEMPLATE` file into `.env.local` (dropping `.TEMPLATE`).
-- [ ] 3. Turn on VLC HTTP Interface, set the password (see Step 2 below), and update `VLC_PASSWORD` in your `.env.local`. Probably need to restart VLC after turning the HTTP interface on for the first time.
-- [ ] 4. Make sure you have `bun` installed to run the script. (https://bun.sh)
-- [ ] 5. Install the js dependencies with `bun install`.
-- [ ] 6. Get the other device's local IP address — own device's IP prints to the console whenever the script starts — then set it to `OTHER_IP` in `.env.local`.
-- [ ] 7. Start the script with `bun run script.ts`.
+1. Git clone this repo down to both computers.
+2. Duplicate the `.env.local.TEMPLATE` file into `.env.local` (dropping `.TEMPLATE`).
+3. Turn on VLC HTTP Interface, set the password (see Step 2 below), and update `VLC_PASSWORD` in your `.env.local`. Probably need to restart VLC after turning the HTTP interface on for the first time.
+4. Make sure you have `bun` installed to run the script. (https://bun.sh)
+5. Install the js dependencies with `bun install`.
+6. Get the other device's local IP address — own device's IP prints to the console whenever the script starts — then set it to `OTHER_IP` in `.env.local`.
+7. Start the script with `bun run script.ts`.
 
-* Another way to get device's local IP on Macs: Wifi settings in Mac menu bar -> "Wifi Settings" -> Details, scroll to bottom.
+_Another way to get device's local IP on Macs:_ Wifi button in Mac menu bar -> "Wifi Settings" -> Details, scroll to bottom.
 
 ## How this Works
 
