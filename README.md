@@ -6,11 +6,11 @@ Keep two VLC players in sync during pause, seek forward/back etc.
 
 ## Supported commands:
 
-- ␣ `spacebar` - pause both
-- ← `left arrow` - jump back 10 sec
-- → `right arrow` - jump fwd 10 sec
-- fn `fn key` - sync your local video's playtime to match the other computer's
-- \` `backtick` - push your local video's playtime to the other computer
+␣ `spacebar` - pause both  
+← `left arrow` - jump back 10 sec  
+→ `right arrow` - jump fwd 10 sec  
+fn `fn key` - sync your local video's playtime to match the other computer's  
+\` `backtick` - push your local video's playtime to the other computer
 
 ## Setup instructions
 
