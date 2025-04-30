@@ -19,7 +19,7 @@ Keep two VLC players in sync during pause, seek forward/back etc.
 1. Git clone this repo down to both computers.
 2. Duplicate the `.env.local.TEMPLATE` file into `.env.local` (dropping `.TEMPLATE`).
 3. Turn on [VLC HTTP Interface](https://wiki.videolan.org/VLC_HTTP_requests/), set the password (see Step 2 below), and update `VLC_PASSWORD` in your `.env.local`. Probably need to restart VLC after turning the HTTP interface on for the first time.
-4. Make sure you have `bun` installed to run the script. (https://bun.sh)
+4. Make sure you have [`bun`](https://bun.sh) installed to run the script.
 5. Install the js dependencies with `bun install`.
 6. Get the other device's local IP address — own device's IP prints to the console whenever the script starts — then set it to `OTHER_IP` in `.env.local`.
 7. Start the script with `bun run script.ts`.
