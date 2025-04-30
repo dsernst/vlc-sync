@@ -21,7 +21,7 @@ Keep two VLC players in sync during pause, seek forward/back etc.
 3. Turn on [VLC HTTP Interface](https://wiki.videolan.org/VLC_HTTP_requests/) (see Step 1 below), set the password, and update `VLC_PASSWORD` in your `.env.local`. Probably need to restart VLC after turning the HTTP interface on for the first time.
 4. Make sure you have [`bun`](https://bun.sh) installed to run the script.
 5. Install the js dependencies with `bun install`.
-6. Get the other device's local IP address — own device's IP prints to the console whenever the script starts — then set it to `OTHER_IP` in `.env.local`.
+6. Get _the other device's_ local IP address: each device's IP prints to the console (🟡 `yellow`) whenever the script starts. Set `OTHER_IP` in `.env.local`.
 7. Start the script with `bun run script.ts`.
 
 _Another way to get device's local IP on Macs:_ Wifi button in Mac menu bar -> "Wifi Settings" -> Details, scroll to bottom.
