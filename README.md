@@ -4,6 +4,14 @@ Keep two VLC players in sync during pause, seek forward/back etc.
 
 <p align="center"><img alt="VLC Sync in action" src="./screenshot.png" width="500px" /></p>
 
+## Supported commands:
+
+- `spacebar` - pause both
+- `right arrow` - jump fwd 10 sec
+- `left arrow` - jump back 10 sec
+- `fn` (fn) - sync your local video's playtime to match the other computer's
+- `~` (backtick) - push your local video's playtime to the other computer
+
 ## Setup instructions
 
 - [ ] 1. Git clone this repo down to both computers.
@@ -15,14 +23,6 @@ Keep two VLC players in sync during pause, seek forward/back etc.
 - [ ] 7. Start the script with `bun run script.ts`.
 
 * Another way to get device's local IP on Macs: Wifi settings in Mac menu bar -> "Wifi Settings" -> Details, scroll to bottom.
-
-## Supported commands:
-
-- `spacebar` - pause both
-- `right arrow` - jump fwd 10 sec
-- `left arrow` - jump back 10 sec
-- `fn` (fn) - sync your local video's playtime to match the other computer's
-- `~` (backtick) - push your local video's playtime to the other computer
 
 ## How this Works
 
