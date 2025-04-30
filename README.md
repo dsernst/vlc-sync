@@ -1,4 +1,4 @@
-# vlc-sync
+# vlc-sync 🎬
 
 Keep two VLC players in sync during pause, seek forward/back etc.
 
@@ -14,7 +14,7 @@ Keep two VLC players in sync during pause, seek forward/back etc.
 | fn  | `fn key`      | sync your local video's playtime to match the other computer's |
 | \`  | `backtick`    | push your local video's playtime to the other computer         |
 
-## Setup Instructions
+## Setup Instructions ⚙️
 
 1. Git clone this repo down to both computers.
 2. Duplicate the `.env.local.TEMPLATE` file into `.env.local` (dropping `.TEMPLATE`).
