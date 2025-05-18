@@ -5,15 +5,15 @@
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "find-devices": "bun run find-local-devices.ts"
+    "other": "bun run ping-for-other-ip.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "local-devices": "^3.0.0",
     "node-global-key-listener": "^0.1.1"
   },
   "devDependencies": {
+    "@types/bun": "^1.2.13",
     "@types/node": "^22.13.8"
   }
 }
