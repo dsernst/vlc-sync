@@ -74,6 +74,8 @@ const commands = {
   'RIGHT ARROW': ['seek&val=+10s', , '→'],
   BACKTICK: ['seek&val=', other, '`'], // sync other to own
   FN: ['seek&val=', own, 'fn'], // sync own to other
+  'UP ARROW': ['volume&val=+5', other, '↑'], // Increase other volume
+  'DOWN ARROW': ['volume&val=-5', other, '↓'], // Decrease other volume
 }
 
 // Our event listeners
@@ -87,12 +89,17 @@ v.addListener(function (e, down) {
 
     if (foundCommand) {
       const [command, target, keyNickname = e.name] = foundCommand
-      if (target) {
-        // The commands w/ a specific target have unique logic
+
+      if (command.startsWith('volume')) {
+        // Volume commands require shift
+        if (shiftPressed) tellVLC(target, command, keyNickname)
+      } else if (target) {
+        // Sync commands (w/ a specific target) have unique logic
         const { time } = await getVLCStatus(target === own ? other : own)
         const offsetTime = time + (target === own ? 1 : 0)
         tellVLC(target, command + offsetTime, keyNickname)
       } else {
+        // Pause / Go back / Go forward
         if (!follower_only || shiftPressed) {
           tellVLC(other, command, keyNickname)
           if (shiftPressed) tellVLC(own, command, keyNickname)
