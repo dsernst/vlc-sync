@@ -18,6 +18,7 @@ if (!vlcPassword) throw new Error('process.env.VLC_PASSWORD not set')
 
 // IP of other device
 const other = process.env.OTHER_IP || '192.168.4.115'
+import './ping-for-other-ip'
 
 // Auth for VLC's http interface
 const base64Credentials = Buffer.from(`:${vlcPassword}`).toString('base64')
