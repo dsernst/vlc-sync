@@ -16,9 +16,9 @@ if (!own) {
 const vlcPassword = process.env.VLC_PASSWORD
 if (!vlcPassword) throw new Error('process.env.VLC_PASSWORD not set')
 
-// IP of other device
-const other = process.env.OTHER_IP || '192.168.4.115'
+// IP of other device (ping-for-other-ip sets process.env.OTHER_IP from OTHER_DEVICE_NAME)
 import './ping-for-other-ip'
+const other = process.env.OTHER_IP || '192.168.4.115'
 
 // Auth for VLC's http interface
 const base64Credentials = Buffer.from(`:${vlcPassword}`).toString('base64')
@@ -40,21 +40,14 @@ const getVLCStatus = async (ip: string) => {
 }
 
 const time = () =>
-  GRAY +
-  new Date().toLocaleTimeString().replace(' AM', 'a').replace(' PM', 'p') +
-  RESET
+  GRAY + new Date().toLocaleTimeString().replace(' AM', 'a').replace(' PM', 'p') + RESET
 
-const tellVLC = async (
-  ip: string,
-  command: string,
-  key: string
-): Promise<void> => {
+const tellVLC = async (ip: string, command: string, key: string): Promise<void> => {
   const url = `http://${ip}:8080/requests/status.xml?command=${command}`
   const who = ip === own ? `${YELLOW} self${RESET}` : `${CYAN}other${RESET}`
   try {
     const response = await fetch(url, headers)
-    if (response.ok)
-      console.log(`${time()}   ${key.padEnd(3)} ${who}  ${command}`)
+    if (response.ok) console.log(`${time()}   ${key.padEnd(3)} ${who}  ${command}`)
     else console.error(`error tellVLC ${who} response: ${response.status}`)
   } catch (error) {
     console.error(`error tellVLC ${who}: ${error}`)
@@ -65,9 +58,7 @@ const v = new GlobalKeyboardListener()
 // Set process.env.FOLLOWER_ONLY = 'true' to disable this computer from controlling the other one.
 const follower_only = process.env.FOLLOWER_ONLY === 'true'
 if (follower_only)
-  console.log(
-    `Follower-only mode: 👀 ON. Use ${GREEN}shift${RESET} to control both.\n`
-  )
+  console.log(`Follower-only mode: 👀 ON. Use ${GREEN}shift${RESET} to control both.\n`)
 
 const commands = {
   SPACE: ['pl_pause', , '␣'],

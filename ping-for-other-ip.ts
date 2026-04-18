@@ -31,8 +31,12 @@ console.log(
   `Found other (${OTHER_DEVICE_NAME}) at:\n  ${CYAN}${otherIp}${RESET}`
 )
 
-if (OTHER_IP !== otherIp)
+// Prefer live discovery; DHCP can change the address while OTHER_DEVICE_NAME stays stable.
+process.env.OTHER_IP = otherIp
+
+if (OTHER_IP && OTHER_IP !== otherIp)
   console.log(
-    `\n⚠️  Mismatch: .env.local $OTHER_IP=\n  ${YELLOW}${OTHER_IP}${RESET}`
+    `\n${GRAY}Using discovered IP (OTHER_IP in .env was ${YELLOW}${OTHER_IP}${GRAY}; update .env when convenient).${RESET}`
   )
-else console.log('✅ .env.local $OTHER_IP set correctly')
+else if (OTHER_IP === otherIp)
+  console.log('✅ .env.local OTHER_IP matches discovered address')
