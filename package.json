@@ -4,8 +4,8 @@
   "description": "Keep two VLC players in sync during pause, seek forward/back",
   "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "other": "bun run ping-for-other-ip.ts"
+    "start": "bun run script.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
